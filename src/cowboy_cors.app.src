@@ -1,0 +1,8 @@
+{application, cowboy_cors, [
+  {id, "cowboy_cors"},
+  {description, "Cowboy middleware for CORS headers"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {applications, [kernel, stdlib]},
+  {env, []}
+]}.
