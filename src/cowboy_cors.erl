@@ -1,6 +1,7 @@
 -module(cowboy_cors).
 
 -export([execute/2]).
+-export([init/0]).
 -export([init/1]).
 
 execute(Req, Env) ->
@@ -12,6 +13,8 @@ execute(Req, Env) ->
       Fun(Req, Env)
   end.
 
+init() ->
+  init([]).
 init(Options) ->
   Origin = fast_key:get(origin, Options, <<"*">>),
   Headers = fast_key:get(headers, Options, <<"origin, x-requested-with, authorization, content-type, cache-control">>),
