@@ -20,6 +20,7 @@ init(Options) ->
   Headers = fast_key:get(headers, Options, <<"origin, x-requested-with, authorization, content-type, cache-control">>),
   Methods = fast_key:get(methods, Options, <<"GET, POST, PUT, DELETE, HEAD">>),
   MaxAge = fast_key:get(max_age, Options, <<"31556926">>),
+  HandleOptions = lists:member(handle_options, Options),
   fun (Req, Env) ->
     Req2 = apply_headers([
       {<<"access-control-allow-origin">>, Origin},
@@ -27,7 +28,12 @@ init(Options) ->
       {<<"access-control-allow-methods">>, Methods},
       {<<"access-control-max-age">>, MaxAge}
     ], Req),
-    {ok, Req2, Env}
+    case cowboy_req:method(Req2) of
+      {<<"OPTIONS">>, Req3} when HandleOptions ->
+        {halt, Req3};
+      {_, Req3} ->
+        {ok, Req3, Env}
+    end
   end.
 
 apply_headers([], Req) ->
